@@ -118,7 +118,7 @@ function Register() {
             value={formData.gender}
             onChange={handleChange}
             required
-            className="w-full py-2.5 px-4 bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-sm text-gray-700 dark:text-gray-300"
+            className="w-full py-2.5 px-4 bg-gray-50 dark:bg-dark-surface-hover border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-sm text-gray-700 dark:text-gray-300"
           >
             <option value="">Select Gender</option>
             <option value="male">Male</option>

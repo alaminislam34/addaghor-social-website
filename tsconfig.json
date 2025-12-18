@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "src/app/(home)/components/Shared/Header/Navbar.jsx"  ],
+, "src/app/(home)/components/Shared/Header/Navbar.jsx", "src/app/(home)/page.jsx"  ],
   "exclude": ["node_modules"]
 }
