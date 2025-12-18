@@ -5,17 +5,79 @@
 }
 
 @theme {
-  /* Branding Colors */
   --color-Primary: #ea580c;
-  --color-light: #f9fafb;
-  --color-gray:#ffffff10;
   /* orange-600 */
-  --color-brand-orange-hover: #f97316;
+  --color-primary-hover: #f97316;
   /* orange-500 */
+  --color-primary-soft: #ffedd5;
+  /* orange-100 */
 
+  /* ========================= */
+  /* LIGHT MODE COLORS */
+  /* ========================= */
 
-  /* dark color theme */
-  --color-dark: #0a0a0a;
+  /* Background */
+  --color-light-bg: #f9fafb;
+  /* main background */
+  --color-light-surface: #ffffff;
+  /* card / modal */
+  --color-light-surface-hover: #f3f4f6;
+
+  /* Text */
+  --color-light-text-primary: #111827;
+  /* main text */
+  --color-light-text-secondary: #4b5563;
+  /* muted text */
+  --color-light-text-disabled: #9ca3af;
+
+  /* Border */
+  --color-light-border: #e5e7eb;
+  --color-light-border-strong: #d1d5db;
+
+  /* Shadow */
+  --shadow-light-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-light-md: 0 4px 6px rgba(0, 0, 0, 0.08);
+  --shadow-light-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* ========================= */
+  /* DARK MODE COLORS */
+  /* ========================= */
+
+  /* Background */
+  --color-dark-bg: #0a0a0a;
+  /* main background */
+  --color-dark-surface: #121212;
+  /* card / modal */
+  --color-dark-surface-hover: #1a1a1a;
+
+  /* Text */
+  --color-dark-text-primary: #f9fafb;
+  /* main text */
+  --color-dark-text-secondary: #9ca3af;
+  /* muted text */
+  --color-dark-text-disabled: #6b7280;
+
+  /* Border */
+  --color-dark-border: #262626;
+  --color-dark-border-strong: #404040;
+
+  /* Shadow */
+  --shadow-dark-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-dark-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+  --shadow-dark-lg: 0 12px 20px rgba(0, 0, 0, 0.6);
+
+  /* ========================= */
+  /* COMMON UI STATES */
+  /* ========================= */
+
+  --color-success: #16a34a;
+  --color-warning: #facc15;
+  --color-danger: #dc2626;
+  --color-info: #2563eb;
+
+  /* Overlay */
+  --color-overlay-light: rgba(0, 0, 0, 0.4);
+  --color-overlay-dark: rgba(0, 0, 0, 0.7);
 }
 
 button {
