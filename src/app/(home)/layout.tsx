@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-light dark:bg-dark transition-colors duration-300">
-        <header>
+        <header className="lg:h-19.25">
           <Navbar />
         </header>
         <main>{children}</main>

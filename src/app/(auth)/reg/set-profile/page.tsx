@@ -116,7 +116,7 @@ function SetProfile() {
                 <span className="label-text">Short Bio</span>
               </label>
               <textarea
-              rows={4}
+                rows={4}
                 className="py-2 px-4 rounded-lg border border-gray-600 focus:border-Primary focus:ring-1 focus:ring-Primary focus:outline-none bg-base-200 w-full duration-300"
                 placeholder="What's on your mind? e.g., 'Web Developer & Traveler'"
                 value={profileData.bio}
@@ -206,7 +206,7 @@ function SetProfile() {
               <button
                 type="button"
                 className="btn btn-ghost text-base-content/60"
-                onClick={() => (window.location.href = "/feed")} // Direct to main app
+                onClick={() => (window.location.href = "/feed")}
               >
                 Skip for now
               </button>
