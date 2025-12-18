@@ -1,90 +1,130 @@
 "use client";
-import {
-  Camera,
-  Image as ImageIcon,
-  Send,
-  MessageCircle,
-  Heart,
-  Share2,
-} from "lucide-react";
 
-const AddaGhorDemo = () => {
+import { useState } from "react";
+
+// --- Types ---
+type InputProps = {
+  label: string;
+  name: string;
+  type: string;
+  placeholder?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  className?: string;
+};
+
+// --- Sub-component: InputField ---
+const InputField = ({
+  label,
+  name,
+  type,
+  placeholder,
+  value,
+  onChange,
+  required = true,
+  className = "",
+}: InputProps) => (
+  <div className={`flex flex-col gap-1.5 w-full ${className}`}>
+    <label
+      htmlFor={name}
+      className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1"
+    >
+      {label}
+    </label>
+    <input
+      id={name}
+      name={name}
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      required={required}
+      className="w-full py-2.5 px-4 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg 
+                 text-gray-900 dark:text-white focus:ring-2 focus:ring-Primary focus:border-transparent 
+                 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500 text-sm"
+    />
+  </div>
+);
+
+const Login = () => {
+  const [formData, setFormData] = useState({
+    identifier: "", 
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Logging in with:", formData);
+  };
+
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-6">
-      {/* 1. Create Post Section */}
-      <div className="adda-card">
-        <div className="flex gap-4">
-          <div className="w-12 h-12 rounded-full bg-brand-primary flex items-center justify-center text-white font-bold text-xl">
-            A
-          </div>
-          <textarea
-            placeholder="কি খবর? নতুন কিছু শেয়ার করুন..."
-            className="w-full bg-background border-none rounded-xl p-3 focus:ring-2 focus:ring-brand-primary outline-none resize-none text-main"
-            rows={2}
-          ></textarea>
-        </div>
+    <div className="max-w-2xl w-full bg-white dark:bg-white/3 border border-gray-200 dark:border-white/10 backdrop-blur-xl rounded-3xl shadow-2xl shadow-Primary/20 dark:shadow-Primary/10 p-6 md:p-10">
+      <header className="text-center mb-10">
+        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-transparent dark:bg-clip-text dark:bg-linear-to-b dark:from-white dark:to-gray-400">
+          AddaGhor
+        </h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">
+          Welcome back! Please login.
+        </p>
+      </header>
 
-        <hr className="my-4 border-border" />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        {/* Identifier Field */}
+        <InputField
+          label="Email or Phone"
+          name="identifier"
+          type="text"
+          placeholder="example@mail.com"
+          value={formData.identifier}
+          onChange={handleChange}
+        />
 
-        <div className="flex justify-between items-center">
-          <div className="flex gap-4">
-            <button className="flex items-center gap-2 text-muted hover:text-brand-primary transition-colors cursor-pointer">
-              <ImageIcon size={20} />{" "}
-              <span className="hidden sm:inline">Photo</span>
+        {/* Password Field */}
+        <div>
+          <InputField
+            label="Password"
+            name="password"
+            type="password"
+            placeholder="••••••••"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <div className="flex justify-end mt-2">
+            <button
+              type="button"
+              className="text-xs text-Primary hover:underline"
+            >
+              Forgot Password?
             </button>
-            <button className="flex items-center gap-2 text-muted hover:text-brand-primary transition-colors cursor-pointer">
-              <Camera size={20} />{" "}
-              <span className="hidden sm:inline">Video</span>
-            </button>
-          </div>
-          <button className="bg-brand-primary text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-opacity flex items-center gap-2">
-            Post <Send size={16} />
-          </button>
-        </div>
-      </div>
-
-      {/* 2. Feed Post Section */}
-      <div className="adda-card">
-        {/* User Info */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-brand-secondary border-2 border-brand-primary"></div>
-            <div>
-              <h4 className="font-bold text-main">রাকিব হাসান</h4>
-              <p className="text-xs text-muted">১০ মিনিট আগে • ঢাকা</p>
-            </div>
           </div>
         </div>
 
-        {/* Post Content */}
-        <div className="space-y-4">
-          <p className="text-main">
-            আজকে থেকে **AddaGhor** প্রজেক্টটা শুরু করলাম! সবাই দোয়া করবেন।
-            ইনশাল্লাহ নতুন কিছু আসতেছে। 🚀🔥
-          </p>
-          {/* Mock Post Image */}
-          <div className="w-full h-64 bg-background rounded-xl flex items-center justify-center border border-border">
-            <span className="text-muted italic text-sm">
-              Post Image / Media Placeholder
-            </span>
-          </div>
-        </div>
+        {/* Login Button */}
+        <button
+          type="submit"
+          className="w-full py-3.5 px-6 bg-Primary hover:opacity-90 text-white font-bold rounded-xl active:scale-[0.98] transition-all shadow-lg shadow-Primary/20 mt-2"
+        >
+          Login
+        </button>
 
-        {/* Interaction Buttons */}
-        <div className="flex justify-between mt-6 pt-4 border-t border-border">
-          <button className="flex items-center gap-2 text-muted hover:text-brand-primary font-medium transition-colors">
-            <Heart size={20} /> ৫২
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+          Don't have an account?{" "}
+          <button
+            type="button"
+            className="text-Primary font-semibold hover:underline"
+          >
+            Sign Up
           </button>
-          <button className="flex items-center gap-2 text-muted hover:text-brand-primary font-medium transition-colors">
-            <MessageCircle size={20} /> ১২ আড্ডা
-          </button>
-          <button className="flex items-center gap-2 text-muted hover:text-brand-primary font-medium transition-colors">
-            <Share2 size={20} /> শেয়ার
-          </button>
-        </div>
-      </div>
+        </p>
+      </form>
     </div>
   );
 };
 
-export default AddaGhorDemo;
+export default Login;

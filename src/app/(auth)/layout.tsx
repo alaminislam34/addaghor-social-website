@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../globals.css";
+import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "AddaGhor",
@@ -13,7 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="min-h-screen w-full flex justify-center items-center bg-light dark:bg-dark transition-colors duration-300 p-4 py-12 relative overflow-hidden">
+        {children}
+        <ToastContainer position="bottom-center" />
+      </body>
     </html>
   );
 }
