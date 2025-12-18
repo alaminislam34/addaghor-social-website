@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../globals.css";
+import Navbar from "../(home)/components/Shared/Header/Navbar";
 
 export const metadata: Metadata = {
   title: "AddaGhor",
@@ -13,7 +14,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-light dark:bg-dark transition-colors duration-300">
+        <header>
+          <Navbar />
+        </header>
+        <main>{children}</main>
+      </body>
     </html>
   );
 }

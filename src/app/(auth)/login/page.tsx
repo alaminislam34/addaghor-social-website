@@ -56,7 +56,7 @@ const Login = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  }; 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
