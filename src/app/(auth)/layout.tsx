@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen w-full flex justify-center items-center bg-light dark:bg-dark transition-colors duration-300 p-4 py-12 relative overflow-hidden">
+      <body className="min-h-screen w-full flex justify-center items-center bg-light dark:bg-dark transition-colors duration-300 p-4 py-12 relative">
         {children}
         <ToastContainer position="bottom-center" />
       </body>

@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { allEndPoints, REGISTER_USER } from "../../../api/apiEndPoint";
+import { toast } from "react-toastify";
 
 type InputProps = {
   label: string;
@@ -48,7 +51,6 @@ const InputField = ({
 );
 
 function Register() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const [formData, setFormData] = useState({
     fullName: "",
     username: "",
@@ -58,6 +60,7 @@ function Register() {
     password: "",
     confirmPassword: "",
   });
+  const router = useRouter();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -65,14 +68,40 @@ function Register() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("Passwords do not match!");
       return;
     }
 
-    console.log("Form Submitted:", formData);
+    try {
+      const response = await fetch(REGISTER_USER, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          full_name: formData.fullName,
+          username: formData.username, // <--- এই লাইনটি মিসিং ছিল
+          email: formData.contact.includes("@") ? formData.contact : null,
+          phone: !formData.contact.includes("@") ? formData.contact : null,
+          password: formData.password,
+          // ব্যাকেন্ডে Gender যদি 'Male' (Capitalized) চায় তবে নিচের মতো দিন:
+          gender:
+            formData.gender.charAt(0).toUpperCase() + formData.gender.slice(1),
+          date_of_birth: formData.dob,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        router.push(`/reg/verify-otp?contact=${formData.contact}`);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Something went wrong!");
+    }
   };
 
   return (

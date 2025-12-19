@@ -1,5 +1,7 @@
 "use client";
 
+import { LOGOUT } from "@/api/apiEndPoint";
+import axios from "axios";
 import {
   Home,
   Users,
@@ -13,6 +15,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 // --- 1. MESSAGE DROPDOWN (UPDATED) ---
 export function MessageDropdown({ onSelectChat }) {
@@ -196,6 +200,18 @@ export function MenuDropdown({ onClose }) {
 
 // --- 4. USER DROPDOWN ---
 export function UserDropdown() {
+  const router = useRouter();
+  const handleLogout = async () => {
+    const res = await axios.post(LOGOUT);
+    if (res.status === 200) {
+      toast.success("Logout successful");
+      setTimeout(() => {
+        router.push("/login");
+      }, 1000);
+    } else {
+      console.log("something went wrong");
+    }
+  };
   return (
     <div className="absolute top-20 right-6 w-64 origin-top-right rounded-2xl border border-gray-100 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200 dark:border-gray-800 dark:bg-gray-900 z-50 p-2">
       <div className="p-3 mb-1 flex items-center gap-3">
@@ -234,7 +250,10 @@ export function UserDropdown() {
         ))}
       </ul>
       <div className="h-px bg-gray-100 dark:bg-gray-800 my-1 mx-2"></div>
-      <button className="w-full mt-1 flex items-center gap-3 py-2 px-3 text-sm font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+      <button
+        onClick={handleLogout}
+        className="w-full mt-1 flex items-center gap-3 py-2 px-3 text-sm font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+      >
         <LogOut size={18} />
         Log out
       </button>
