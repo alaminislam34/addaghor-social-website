@@ -50,7 +50,7 @@ function CreatePost() {
   };
 
   return (
-    <div className="flex items-center gap-6 border-b p-6 relative">
+    <div className="flex items-center gap-6 border-b border-b-gray-200 p-6 relative">
       {/* --- Trigger Area --- */}
       <div>
         <Image
