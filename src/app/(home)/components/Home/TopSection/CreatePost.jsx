@@ -50,29 +50,31 @@ function CreatePost() {
   };
 
   return (
-    <div className="flex items-center gap-6 border-b border-b-gray-200 p-6 relative">
+    <div className="flex items-center gap-6 border-b border-b-gray-200 dark:border-b-gray-500/50 p-4 relative">
       {/* --- Trigger Area --- */}
-      <div>
+      <div className="w-12 h-10 border rounded-full border-gray-300 dark:border-Primary">
         <Image
           src={"/logos/user.png"}
           width={40}
           height={40}
           alt="User image"
-          className="w-10 h-10 bg-cover bg-center object-cover rounded-full"
+          className=" w-10 h-10 bg-cover bg-center object-cover rounded-full"
         />
       </div>
       <div className="w-full">
-        <input
-          readOnly
-          onClick={() => setIsOpen(true)}
-          type="text"
-          placeholder="Create post"
-          className="py-2 px-6 rounded-lg w-full bg-gray-100 focus:bg-gray-300 placeholder:text-gray-400 cursor-pointer"
-        />
+        <div className="w-full">
+          <input
+            readOnly
+            onClick={() => setIsOpen(true)}
+            type="text"
+            placeholder="Create post"
+            className="py-2 px-6 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600/50 duration-300 w-full bg-gray-100 dark:bg-gray-500/50 focus:bg-gray-300 placeholder:text-gray-400 cursor-pointer"
+          />
+        </div>
       </div>
       <button
         onClick={() => setIsOpen(true)}
-        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+        className="p-2 rounded-full bg-gray-100 dark:bg-gray-600/50 border border-gray-300 dark:border-gray-500/50 dark:hover:bg-gray-600/50 dark:text-white hover:bg-gray-200"
       >
         <ImagePlus />
       </button>
