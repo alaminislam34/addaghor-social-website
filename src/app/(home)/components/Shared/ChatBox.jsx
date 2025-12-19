@@ -36,7 +36,7 @@ export default function ChatBox({ user, onClose }) {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 md:right-20 w-82.5 bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200 dark:border-gray-800 z-60 animate-in slide-in-from-bottom-5 overflow-hidden">
+    <div className="fixed bottom-6 right-6 w-82.5 bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200 dark:border-gray-800 z-60 animate-in slide-in-from-bottom-5 overflow-hidden">
       {/* HEADER SECTION (Keep your existing header code here) */}
       <div className="flex items-center justify-between p-3 border-b border-gray-100 dark:border-gray-800">
         <div className="flex items-center gap-2">
