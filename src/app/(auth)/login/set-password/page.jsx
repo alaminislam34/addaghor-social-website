@@ -38,8 +38,8 @@ const InputField = ({
 );
 function ForgotPassword() {
   const [formData, setFormData] = useState({
-    identifier: "",
     password: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -54,7 +54,7 @@ function ForgotPassword() {
     setLoading(true);
 
     try {
-      router.push("/login/verify-otp");
+      router.push("/login");
     } catch (error) {
       console.error("Login Error:", error);
       toast.error("Internal Server Error. Try again later.");
@@ -70,17 +70,25 @@ function ForgotPassword() {
       </Link>
       <header className="text-center py-2 my-6">
         <h1 className="text-4xl font-extrabold leading-normal text-gray-900 dark:text-transparent dark:bg-clip-text dark:bg-linear-to-b dark:from-white dark:to-gray-400">
-          Forgot your password
+          Set your new password
         </h1>
       </header>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <InputField
-          label="Email or Phone"
-          name="identifier"
-          type="text"
-          placeholder="example@mail.com"
-          value={formData.identifier}
+          label="Password"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          value={formData.password}
+          onChange={handleChange}
+        />
+        <InputField
+          label="Confirm Password"
+          name="confirmPassword"
+          type="password"
+          placeholder="••••••••"
+          value={formData.confirmPassword}
           onChange={handleChange}
         />
 
