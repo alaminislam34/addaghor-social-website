@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import Navbar from "../(home)/components/Shared/Header/Navbar";
+import { AuthProvider } from "@/app/providers/authProvider";
 
 export const metadata: Metadata = {
   title: "AddaGhor",
@@ -18,7 +19,9 @@ export default function RootLayout({
         <header className="h-19 lg:h-19.25">
           <Navbar />
         </header>
-        <main>{children}</main>
+        <main>
+          <AuthProvider>{children}</AuthProvider>
+        </main>
       </body>
     </html>
   );

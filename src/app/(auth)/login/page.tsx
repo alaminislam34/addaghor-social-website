@@ -69,40 +69,34 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(SIGNIN_USER, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axios.post(
+        SIGNIN_USER,
+        {
           identifier: formData.identifier,
           password: formData.password,
-        }),
-        credentials: "include",
-      });
+        },
+        { withCredentials: true }
+      );
 
-      const result = await response.json();
-      console.log(result);
+      const result = response.data;
+
       if (result.success) {
         toast.success("Login Successful!");
 
         localStorage.setItem("accessToken", result.accessToken);
         localStorage.setItem("refreshToken", result.refreshToken);
-        setTimeout(() => {
-          router.push("/");
-        }, 1000);
+
+        router.push("/");
         router.refresh();
       } else {
-        if (result.message === "Account not verified!") {
-          toast.info("Please verify your account first.");
-          router.push(`/reg/verify-otp?contact=${formData.identifier}`);
-        } else {
-          toast.error(result.message || "Invalid credentials");
-        }
+        toast.error(result.message || "Invalid credentials");
       }
-    } catch (error) {
-      console.error("Login Error:", error);
-      toast.error("Internal Server Error. Try again later.");
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Login failed");
+      } else {
+        toast.error("Unexpected error occurred");
+      }
     } finally {
       setLoading(false);
     }

@@ -33,13 +33,6 @@ const stories = [
     storyImg: "/images/story.jpg",
     active: true,
   },
-  {
-    id: 5,
-    name: "ArtisticSoul",
-    userImg: "/logos/user.png",
-    storyImg: "/images/story.jpg",
-    active: true,
-  },
 ];
 
 function StoryViewer({ initialIndex, onClose }) {
@@ -263,7 +256,7 @@ export default function StorySection() {
         onScroll={handleScroll}
         className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar scroll-smooth"
       >
-        <div className="relative shrink-0 w-28 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
+        <div className="relative shrink-0 min-w-36 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
           <div className="h-[70%] relative overflow-hidden">
             <Image
               src="/logos/user.png"
@@ -286,7 +279,7 @@ export default function StorySection() {
           <div
             key={story.id}
             onClick={() => setSelectedStoryIndex(index)}
-            className="relative shrink-0 w-28 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer group/item shadow-sm border border-gray-100 dark:border-gray-800"
+            className="relative shrink-0 min-w-36 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer group/item shadow-sm border border-gray-100 dark:border-gray-800"
           >
             <Image
               src={story.storyImg}
