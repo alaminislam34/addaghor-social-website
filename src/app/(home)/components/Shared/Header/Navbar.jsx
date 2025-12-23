@@ -21,11 +21,13 @@ import {
   NotificationDropdown,
 } from "../NavbarDropDowns";
 import ChatBox from "../ChatBox";
+import { useAuth } from "@/app/providers/authProvider";
 
 export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeChat, setActiveChat] = useState(null);
   const navRef = useRef(null);
+  const { user } = useAuth();
 
   useClickOutside(navRef, () => setActiveDropdown(null));
 
@@ -34,10 +36,10 @@ export default function Navbar() {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 bg-white dark:bg-dark-bg border-b border-gray-100 dark:border-dark-border transition-colors">
+    <div className="fixed top-0 left-0 w-full z-50 bg-white dark:bg-transparent backdrop-blur-3xl border-b border-gray-100 dark:border-gray-500/50 transition-colors">
       <nav
         ref={navRef}
-        className="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between h-20 relative"
+        className="px-4 md:px-6 flex items-center justify-between h-20 relative"
       >
         <Link href="/" className="shrink-0">
           <h1 className="text-xl md:text-2xl font-bold text-Primary">
@@ -82,8 +84,8 @@ export default function Navbar() {
           {activeDropdown === "message" && (
             <MessageDropdown
               onSelectChat={(user) => {
-                setActiveChat(user); // Set the chat user
-                setActiveDropdown(null); // Close the dropdown
+                setActiveChat(user);
+                setActiveDropdown(null);
               }}
             />
           )}
@@ -104,7 +106,7 @@ export default function Navbar() {
               className="flex items-center gap-1 cursor-pointer p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 border border-transparent hover:border-gray-200 transition-all"
             >
               <Image
-                src="/logos/user.png"
+                src={"/logos/user.png"}
                 height={38}
                 width={38}
                 alt="User"
@@ -118,7 +120,7 @@ export default function Navbar() {
               />
             </div>
           </div>
-          {activeDropdown === "user" && <UserDropdown />}
+          {activeDropdown === "user" && <UserDropdown user={user} />}
         </div>
 
         {/* The Floating Chat Box */}

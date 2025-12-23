@@ -15,14 +15,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-light dark:bg-dark transition-colors duration-300">
-        <header className="h-19 lg:h-19.25">
-          <Navbar />
-        </header>
-        <main>
-          <AuthProvider>{children}</AuthProvider>
-        </main>
-      </body>
+      <AuthProvider>
+        <body className="bg-light dark:bg-dark transition-colors duration-300">
+          <header className="h-19 lg:h-19.25">
+            <Navbar />
+          </header>
+          <main>{children}</main>
+        </body>
+      </AuthProvider>
     </html>
   );
 }

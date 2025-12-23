@@ -13,7 +13,7 @@ import Image from "next/image";
 
 function LeftSidebar() {
   return (
-    <aside className="flex flex-col xl:w-[320px] h-[calc(100vh-76px)] lg:h-[calc(100vh-80px)] p-3 overflow-y-auto custom-scrollbar bg-transparent">
+    <aside className="flex flex-col xl:w-[320px] h-[calc(100vh-76px)] lg:h-[calc(100vh-80px)] sticky top-20 no-scrollbar p-4 overflow-y-auto custom-scrollbar bg-transparent">
       {/* User Profile Section */}
       <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-light-surface-hover dark:hover:bg-dark-surface-hover cursor-pointer transition-all group">
         <div className="relative w-9 h-9 rounded-full overflow-hidden border border-light-border dark:border-dark-border">

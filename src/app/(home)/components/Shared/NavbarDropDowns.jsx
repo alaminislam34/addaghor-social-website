@@ -199,7 +199,7 @@ export function MenuDropdown({ onClose }) {
 }
 
 // --- 4. USER DROPDOWN ---
-export function UserDropdown() {
+export function UserDropdown({ user }) {
   const router = useRouter();
   const handleLogout = async () => {
     const res = await axios.post(LOGOUT);
@@ -216,7 +216,7 @@ export function UserDropdown() {
     <div className="absolute top-20 right-6 w-64 origin-top-right rounded-2xl border border-gray-100 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200 dark:border-gray-800 dark:bg-gray-900 z-50 p-2">
       <div className="p-3 mb-1 flex items-center gap-3">
         <Image
-          src="/logos/user.png"
+          src={"/logos/user.png"}
           height={44}
           width={44}
           alt="User"
@@ -224,11 +224,9 @@ export function UserDropdown() {
         />
         <div>
           <h1 className="text-sm font-semibold text-gray-900 dark:text-white">
-            Al Amin Islam
+            {user.full_name}
           </h1>
-          <p className="text-xs text-gray-500 truncate w-32">
-            alamin@example.com
-          </p>
+          <p className="text-xs text-gray-500 truncate w-32">{user.email}</p>
         </div>
       </div>
       <div className="h-px bg-gray-100 dark:bg-gray-800 my-1 mx-2"></div>

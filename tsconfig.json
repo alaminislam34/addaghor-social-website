@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "src/app/(home)/components/Shared/Header/Navbar.jsx", "src/app/(home)/page.jsx"  ],
+, "src/app/(home)/components/Shared/Header/Navbar.jsx", "src/app/(home)/page.jsx", "src/api/apiEndPoint.js", "src/api/base_url.js", "src/app/(auth)/reg/page.jsx", "src/app/(auth)/reg/set-profile/page.jsx", "src/app/(auth)/reg/verify-otp/page.jsx"  ],
   "exclude": ["node_modules"]
 }

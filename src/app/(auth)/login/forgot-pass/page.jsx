@@ -4,7 +4,9 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
+// InputField Component (JSX version)
 const InputField = ({
   label,
   name,
@@ -36,10 +38,10 @@ const InputField = ({
     />
   </div>
 );
+
 function ForgotPassword() {
   const [formData, setFormData] = useState({
     identifier: "",
-    password: "",
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -53,25 +55,34 @@ function ForgotPassword() {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      router.push("/login/verify-otp");
-    } catch (error) {
-      console.error("Login Error:", error);
-      toast.error("Internal Server Error. Try again later.");
-    } finally {
+    // Mimicking API Delay
+    setTimeout(() => {
+      if (formData.identifier) {
+        toast.success("OTP sent to your email/phone!");
+        router.push("/login/verify-otp");
+      } else {
+        toast.error("Please provide a valid email or phone number");
+      }
       setLoading(false);
-    }
+    }, 1200);
   };
 
   return (
     <div className="max-w-2xl w-full bg-white dark:bg-white/3 border border-gray-200 dark:border-white/10 backdrop-blur-xl rounded-3xl shadow-2xl shadow-Primary/20 dark:shadow-Primary/10 p-6 md:p-10">
-      <Link href={"/login"} className={``}>
-        <ArrowLeft />
+      <Link
+        href={"/login"}
+        className="text-gray-600 dark:text-gray-400 hover:text-orange-500 transition-colors inline-block mb-4"
+      >
+        <ArrowLeft size={24} />
       </Link>
-      <header className="text-center py-2 my-6">
+
+      <header className="text-center py-2 mb-6">
         <h1 className="text-4xl font-extrabold leading-normal text-gray-900 dark:text-transparent dark:bg-clip-text dark:bg-linear-to-b dark:from-white dark:to-gray-400">
           Forgot your password
         </h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">
+          Enter your details to receive a verification code.
+        </p>
       </header>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -89,10 +100,12 @@ function ForgotPassword() {
             type="submit"
             disabled={loading}
             className={`w-full py-3.5 px-6 ${
-              loading ? "bg-gray-400" : "bg-orange-500 hover:opacity-90"
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-orange-500 hover:opacity-90"
             } text-white font-bold rounded-xl active:scale-[0.98] transition-all shadow-lg shadow-orange-500/20 mt-2`}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Sending Code..." : "Send OTP"}
           </button>
         </div>
       </form>

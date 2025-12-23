@@ -1,79 +1,57 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import axios from "axios";
-import { API_BASE_URL } from "@/api/apiEndPoint";
+import { GET_USER, REFRESH_TOKEN } from "@/api/apiEndPoint";
 
-/* ============== CONTEXT ================= */
+/* ================= CONTEXT ================= */
 
-const AuthContext = (createContext < AuthContextType) | (undefined > undefined);
+const AuthContext = createContext();
 
-/* ============== PROVIDER ================= */
+/* ================= PROVIDER ================= */
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = (useState < User) | (null > null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /* ---------- Load user on refresh ---------- */
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-
-    if (!token) {
+  /* ---------- Fetch current user ---------- */
+  const fetchUser = async () => {
+    setLoading(true);
+    try {
+      const res = await GET_USER(); // baseApi ekhon auto token refresh handle korbe
+      setUser(res.data.user);
+    } catch (err) {
+      console.log("User fetch failed, handled by interceptor");
+      setUser(null);
+    } finally {
       setLoading(false);
-      return;
     }
+  };
 
-    axios
-      .get("", {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        setUser(res.data.user);
-      })
-      .catch(() => {
-        localStorage.removeItem("accessToken");
-        setUser(null);
-      })
-      .finally(() => setLoading(false));
+  /* ---------- On page refresh ---------- */
+  useEffect(() => {
+    fetchUser();
   }, []);
 
-  /* ---------- Login ---------- */
-  const login = (accessToken, userData) => {
-    localStorage.setItem("accessToken", accessToken);
-    setUser(userData);
+  /* ---------- Refetch user manually ---------- */
+  const refetchUser = async () => {
+    setLoading(true);
+    await fetchUser();
   };
 
-  /* ---------- Logout ---------- */
-  const logout = () => {
-    localStorage.removeItem("accessToken");
-    setUser(null);
+  const value = {
+    user,
+    loading,
+    isAuthenticated: !!user,
 
-    axios.post(
-      `${API_BASE_URL}/api/v1/auth/logout`,
-      {},
-      { withCredentials: true }
-    );
+    refetchUser,
   };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        isAuthenticated: !!user,
-        login,
-        logout,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-/* ============== HOOK ================= */
+/* ================= CUSTOM HOOK ================= */
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

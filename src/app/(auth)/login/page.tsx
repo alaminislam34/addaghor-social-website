@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { SIGNIN_USER } from "@/api/apiEndPoint";
-import axios from "axios";
 
 // --- Types ---
 type InputProps = {
@@ -68,38 +66,18 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const response = await axios.post(
-        SIGNIN_USER,
-        {
-          identifier: formData.identifier,
-          password: formData.password,
-        },
-        { withCredentials: true }
-      );
+    // Ekhane fake delay deya hoyeche API call mimic korar jonno
+    setTimeout(() => {
+      console.log("Form Data:", formData);
 
-      const result = response.data;
+      // Toast message dekhano hocche
+      toast.success("Login Successful! (Demo Mode)");
 
-      if (result.success) {
-        toast.success("Login Successful!");
+      // Simulating successful login redirect
+      router.push("/");
 
-        localStorage.setItem("accessToken", result.accessToken);
-        localStorage.setItem("refreshToken", result.refreshToken);
-
-        router.push("/");
-        router.refresh();
-      } else {
-        toast.error(result.message || "Invalid credentials");
-      }
-    } catch (error: any) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Login failed");
-      } else {
-        toast.error("Unexpected error occurred");
-      }
-    } finally {
       setLoading(false);
-    }
+    }, 1500);
   };
 
   return (
@@ -146,7 +124,9 @@ const Login = () => {
           type="submit"
           disabled={loading}
           className={`w-full py-3.5 px-6 ${
-            loading ? "bg-gray-400" : "bg-orange-500 hover:opacity-90"
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-orange-500 hover:opacity-90"
           } text-white font-bold rounded-xl active:scale-[0.98] transition-all shadow-lg shadow-orange-500/20 mt-2`}
         >
           {loading ? "Logging in..." : "Login"}

@@ -2,22 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { allEndPoints, REGISTER_USER } from "../../../api/apiEndPoint";
 import { toast } from "react-toastify";
 
-type InputProps = {
-  label: string;
-  name: string;
-  type: string;
-  placeholder?: string;
-  value: string;
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => void;
-  required?: boolean;
-  className?: string;
-};
-
+// --- InputField Component ---
 const InputField = ({
   label,
   name,
@@ -27,7 +14,7 @@ const InputField = ({
   onChange,
   required = true,
   className = "",
-}: InputProps) => (
+}) => (
   <div className={`flex flex-col gap-1.5 w-full ${className}`}>
     <label
       htmlFor={name}
@@ -60,48 +47,35 @@ function Register() {
     password: "",
     confirmPassword: "",
   });
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Password validation
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match!");
       return;
     }
 
-    try {
-      const response = await fetch(REGISTER_USER, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          full_name: formData.fullName,
-          username: formData.username, // <--- এই লাইনটি মিসিং ছিল
-          email: formData.contact.includes("@") ? formData.contact : null,
-          phone: !formData.contact.includes("@") ? formData.contact : null,
-          password: formData.password,
-          // ব্যাকেন্ডে Gender যদি 'Male' (Capitalized) চায় তবে নিচের মতো দিন:
-          gender:
-            formData.gender.charAt(0).toUpperCase() + formData.gender.slice(1),
-          date_of_birth: formData.dob,
-        }),
-      });
+    setLoading(true);
 
-      const result = await response.json();
-      if (result.success) {
-        router.push(`/reg/verify-otp?contact=${formData.contact}`);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Something went wrong!");
-    }
+    // Mimicking API call with Delay
+    setTimeout(() => {
+      console.log("Registered Data:", formData);
+
+      toast.success("Account created! Please verify your OTP.");
+
+      // Redirect to OTP page with contact info in query
+      router.push(`/reg/verify-otp?contact=${formData.contact}`);
+
+      setLoading(false);
+    }, 1500);
   };
 
   return (
@@ -147,7 +121,7 @@ function Register() {
             value={formData.gender}
             onChange={handleChange}
             required
-            className="w-full py-2.5 px-4 bg-gray-50 dark:bg-dark-surface-hover border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-sm text-gray-700 dark:text-gray-300"
+            className="w-full py-2.5 px-4 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-sm text-gray-700 dark:text-gray-300 appearance-none cursor-pointer"
           >
             <option value="">Select Gender</option>
             <option value="male">Male</option>
@@ -196,9 +170,12 @@ function Register() {
         <div className="md:col-span-2 pt-4">
           <button
             type="submit"
-            className="w-full py-3.5 px-6 bg-Primary text-white font-bold rounded-xl active:scale-[0.98] transition-all shadow-lg shadow-Primary/20"
+            disabled={loading}
+            className={`w-full py-3.5 px-6 ${
+              loading ? "bg-gray-400" : "bg-orange-500 hover:opacity-90"
+            } text-white font-bold rounded-xl active:scale-[0.98] transition-all shadow-lg shadow-orange-500/20`}
           >
-            Create Account
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
         </div>
       </form>
@@ -207,17 +184,17 @@ function Register() {
         Already have an account?
         <a
           href="/login"
-          className="text-Primary dark:text-orange-400 font-medium hover:underline px-1"
+          className="text-orange-500 font-medium hover:underline px-1"
         >
           Log in
         </a>
         <div className="mt-4">
           By signing up, you agree to our
-          <span className="text-Primary dark:text-orange-400 cursor-pointer hover:underline px-1">
+          <span className="text-orange-500 cursor-pointer hover:underline px-1">
             Terms
           </span>
           and
-          <span className="text-Primary dark:text-orange-400 cursor-pointer hover:underline px-1">
+          <span className="text-orange-500 cursor-pointer hover:underline px-1">
             Privacy Policy
           </span>
           .

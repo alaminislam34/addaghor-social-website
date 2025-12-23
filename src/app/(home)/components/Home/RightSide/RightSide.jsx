@@ -36,7 +36,7 @@ const contacts = [
 
 function RightSide({ onSelectChat }) {
   return (
-    <div className=" h-[calc(100vh-80px)] sticky top-20 p-4 overflow-y-auto no-scrollbar border-l border-gray-100 dark:border-dark-border bg-white dark:bg-dark-bg">
+    <div className=" h-[calc(100vh-80px)] sticky top-20 p-4 overflow-y-auto no-scrollbar border-l border-gray-100 dark:border-dark-border bg-white dark:bg-transparent">
       {/* --- HEADER --- */}
       <div className="flex items-center justify-between text-gray-500 dark:text-gray-400 mb-4">
         <h2 className="font-semibold text-gray-900 dark:text-white">

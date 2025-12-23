@@ -241,7 +241,7 @@ export default function StorySection() {
   };
 
   return (
-    <div className="relative group mb-6 p-4">
+    <div className="relative group p-4">
       {showLeftArrow && (
         <button
           onClick={() => scroll("left")}
@@ -254,9 +254,9 @@ export default function StorySection() {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar scroll-smooth"
+        className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar scroll-smooth mx-auto"
       >
-        <div className="relative shrink-0 min-w-36 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
+        <div className="relative shrink-0 min-w-37.5 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
           <div className="h-[70%] relative overflow-hidden">
             <Image
               src="/logos/user.png"
@@ -279,7 +279,7 @@ export default function StorySection() {
           <div
             key={story.id}
             onClick={() => setSelectedStoryIndex(index)}
-            className="relative shrink-0 min-w-36 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer group/item shadow-sm border border-gray-100 dark:border-gray-800"
+            className="relative shrink-0 min-w-37.5 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer group/item shadow-sm border border-gray-100 dark:border-gray-800"
           >
             <Image
               src={story.storyImg}

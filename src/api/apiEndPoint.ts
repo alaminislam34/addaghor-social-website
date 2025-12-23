@@ -1,15 +1,22 @@
 // src/api/apiEndpoints.js
 
-const baseApi = "http://localhost:5000";
+import baseApi from "./base_url";
 
-// Profile and Auth
-export const REGISTER_USER = `${baseApi}/api/v1/auth/signup`;
-export const OTP_VERIFY = `${baseApi}/api/v1/auth/verify-otp`;
-export const SIGNIN_USER = `${baseApi}/api/v1/auth/signin`;
-export const LOGOUT = `${baseApi}/api/v1/auth/logout`;
-export const TOKEN_REFRESH = `${baseApi}/api/v1/auth/refresh-token`;
-export const RESEND_OTP = `${baseApi}/api/v1/auth/resend-otp`;
-export const UPDATE_PROFILE = `${baseApi}/api/v1/users/update-profile`;
+export const REGISTER_USER = (data: any) =>
+  baseApi.post("/api/v1/auth/signup", data);
+export const OTP_VERIFY = (data: any) =>
+  baseApi.post("/api/v1/auth/verify-otp", data);
+export const SIGNIN_USER = (data: any) =>
+  baseApi.post("/api/v1/auth/signin", data);
+export const LOGOUT = () => baseApi.post("/api/v1/auth/logout");
+export const TOKEN_REFRESH = () => baseApi.post("/api/v1/auth/refresh-token");
+export const RESENT_OTP = (data: any) =>
+  baseApi.post("/api/v1/auth/resend-otp", data);
+
+export const UPDATE_PROFILE = (data: any) =>
+  baseApi.put("/api/v1/users/update-profile", data);
+export const GET_USER = () => baseApi.get("/api/v1/users/me");
+export const REFRESH_TOKEN = "http://localhost:5000/api/v1/auth/refresh-token";
 
 // Password Reset
 const PASSWORD_RESET_REQUEST = "/api/password-reset/request/";
@@ -30,4 +37,5 @@ export const allEndPoints = {
   SIGNIN_USER,
   LOGOUT,
   TOKEN_REFRESH,
+  RESENT_OTP
 };

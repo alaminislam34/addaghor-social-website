@@ -1,114 +1,80 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
-// Define the API Base URL from environment variables for production
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-const REFRESH_ENDPOINT = "/api/v1/auth/refresh-token/";
-
-// Create an axios instance
 const baseApi = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-// A flag to prevent multiple concurrent refresh requests
-let isRefreshing = false;
-let failedQueue: any[] = [];
+// Refresh process track korar jonno variable
+let refreshPromise: Promise<string | null> | null = null;
 
-// Helper function to process the queue of failed requests
-const processQueue = (error: any, token = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
-  });
-  failedQueue = [];
-};
-
-// --- 1. Request Interceptor: Add Authorization Header ---
 baseApi.interceptors.request.use(
-  (config) => {
-    const token = Cookies.get("accessToken");
+  async (config) => {
+    let accessToken = Cookies.get("accessToken");
+    const refreshToken = Cookies.get("refreshToken");
 
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+    // 1. Jodi token na thake, login-e pathan (Loop protection)
+    if (!accessToken && !refreshToken) {
+      // Logic for redirect if needed, but don't loop
+      return config;
+    }
+
+    // 2. Token expired ki na check kora
+    const isExpired = (token: string) => {
+      try {
+        const { exp } = jwtDecode<{ exp: number }>(token);
+        return Date.now() >= exp * 1000 - 10000; // 10s buffer
+      } catch {
+        return true;
+      }
+    };
+
+    if (accessToken && isExpired(accessToken)) {
+      // 3. Jodi refresh cholte thake, oitar jonno wait korbe (Single Request)
+      if (!refreshPromise) {
+        refreshPromise = (async () => {
+          try {
+            const res = await axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
+              {
+                refresh: refreshToken,
+              }
+            );
+            const { access } = res.data;
+            Cookies.set("accessToken", access);
+            return access;
+          } catch (err) {
+            // 4. JODI REFRESH FAIL KORE (User deleted or token invalid)
+            Cookies.remove("accessToken");
+            Cookies.remove("refreshToken");
+            refreshPromise = null;
+
+            // Redirect logic (Only once)
+            if (
+              typeof window !== "undefined" &&
+              window.location.pathname !== "/login"
+            ) {
+              window.location.href = "/login";
+            }
+            return null;
+          } finally {
+            refreshPromise = null;
+          }
+        })();
+      }
+
+      const newToken = await refreshPromise;
+      if (newToken) {
+        config.headers["Authorization"] = `Bearer ${newToken}`;
+      }
+    } else if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
     return config;
   },
   (error) => Promise.reject(error)
-);
-
-// --- 2. Response Interceptor: Handle Token Expiration and Refresh ---
-baseApi.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    // Check for 401 Unauthorized and the specific token expiration code
-    if (
-      error.response?.status === 401 &&
-      error.response?.data?.code === "token_not_valid"
-    ) {
-      const refreshToken = Cookies.get("refreshToken");
-
-      // If we don't have a refresh token or it's already a refresh request attempt, redirect
-      if (!refreshToken || originalRequest._retry) {
-        Cookies.remove("accessToken");
-        Cookies.remove("refreshToken");
-        // Redirect using location for Next.js consistency if not in a server component
-        window.location.href = "/login";
-        return Promise.reject(error);
-      }
-
-      // Add the request to the queue and wait if a refresh is already in progress
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject, originalRequest });
-        })
-          .then((token) => {
-            originalRequest.headers["Authorization"] = `Bearer ${token}`;
-            return axios(originalRequest);
-          })
-          .catch((err) => {
-            return Promise.reject(err);
-          });
-      }
-
-      originalRequest._retry = true; // Mark as retried
-      isRefreshing = true;
-
-      try {
-        // Use the baseApi instance for the refresh call
-        const refreshResponse = await baseApi.post(REFRESH_ENDPOINT, {
-          refresh: refreshToken,
-        });
-
-        const { access, refresh } = refreshResponse.data;
-
-        Cookies.set("accessToken", access);
-        Cookies.set("refreshToken", refresh);
-
-        // Update header for the original request and any queued requests
-        baseApi.defaults.headers.common["Authorization"] = `Bearer ${access}`;
-        processQueue(null, access);
-
-        originalRequest.headers["Authorization"] = `Bearer ${access}`;
-        return axios(originalRequest);
-      } catch (refreshError) {
-        processQueue(refreshError); // Reject all queued requests
-        Cookies.remove("accessToken");
-        Cookies.remove("refreshToken");
-        window.location.href = "/login";
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
-      }
-    }
-
-    return Promise.reject(error);
-  }
 );
 
 export default baseApi;

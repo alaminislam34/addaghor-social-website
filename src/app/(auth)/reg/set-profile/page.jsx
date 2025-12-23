@@ -9,41 +9,41 @@ import {
   GraduationCap,
   Loader2,
 } from "lucide-react";
-import { UPDATE_PROFILE } from "@/api/apiEndPoint";
 import { toast } from "react-toastify";
 
+/**
+ * SetProfile Component
+ * User-er profile info (Bio, Work, Education, Photos) set korar jonno.
+ */
 function SetProfile() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  // প্রোফাইল ডাটা স্টেট
+  // Profile Data State (JSX Format)
   const [profileData, setProfileData] = useState({
     bio: "",
     hometown: "",
     work: "",
     education: "",
-    avatar: null as string | null,
-    cover: null as string | null,
+    avatar: null,
+    cover: null,
   });
 
-  // পেজ লোড হওয়ার সময় টোকেন চেক করা
+  // Login check logic
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      toast.warn("Please log in first");
-      router.push("/login");
-    }
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null;
+    // Note: Ekhane apni temporary-vhabe check off rakhte paren jodi login chara design dekhte chan.
   }, [router]);
 
-  // ইমেজ হ্যান্ডলিং (Base64 conversion)
-  const handleImageChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: "avatar" | "cover"
-  ) => {
+  // Image handling logic
+  const handleImageChange = (e, field) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
 
-      // ফাইল সাইজ চেক (৫ এমবির বেশি হলে ওয়ার্নিং দিবে)
+      // File size limit check (5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast.error("File size is too large (Max 5MB)");
         return;
@@ -53,53 +53,24 @@ function SetProfile() {
       reader.onload = (event) => {
         setProfileData((prev) => ({
           ...prev,
-          [field]: event.target?.result as string,
+          [field]: event.target.result,
         }));
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const token = localStorage.getItem("accessToken");
-
-    const payload = {
-      bio: profileData.bio,
-      hometown: profileData.hometown,
-      work: profileData.work,
-      education: profileData.education,
-      profile_pic: profileData.avatar,
-      cover_pic: profileData.cover,
-    };
-
-    try {
-      const response = await fetch(UPDATE_PROFILE, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        toast.success("Profile updated successfully!");
-        router.push("/");
-        router.refresh();
-      } else {
-        toast.error(result.message || "Something went wrong");
-      }
-    } catch (error) {
-      console.error("Update error:", error);
-      toast.error("Failed to save profile. Check server limits.");
-    } finally {
+    // Mocking API delay
+    setTimeout(() => {
+      console.log("Updated Profile Data:", profileData);
+      toast.success("Profile updated successfully!");
+      router.push("/"); // Home page-e niye jabe
       setLoading(false);
-    }
+    }, 2000);
   };
 
   return (
@@ -171,7 +142,7 @@ function SetProfile() {
                 onChange={(e) =>
                   setProfileData({ ...profileData, bio: e.target.value })
                 }
-                className="py-3 px-4 rounded-2xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 focus:ring-2 focus:ring-orange-500 outline-none transition-all resize-none"
+                className="py-3 px-4 rounded-2xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 focus:ring-2 focus:ring-orange-500 outline-none transition-all resize-none text-gray-900 dark:text-white"
                 placeholder="Write a few words about yourself..."
               />
             </div>
@@ -194,7 +165,7 @@ function SetProfile() {
                       setProfileData({ ...profileData, work: e.target.value })
                     }
                     placeholder="E.g. Full Stack Developer"
-                    className="w-full py-3 pl-12 pr-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 focus:ring-2 focus:ring-orange-500 outline-none"
+                    className="w-full py-3 pl-12 pr-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 focus:ring-2 focus:ring-orange-500 outline-none text-gray-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -219,7 +190,7 @@ function SetProfile() {
                       })
                     }
                     placeholder="E.g. University of Dhaka"
-                    className="w-full py-3 pl-12 pr-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 focus:ring-2 focus:ring-orange-500 outline-none"
+                    className="w-full py-3 pl-12 pr-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 focus:ring-2 focus:ring-orange-500 outline-none text-gray-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -244,13 +215,13 @@ function SetProfile() {
                       })
                     }
                     placeholder="E.g. Dhaka, Bangladesh"
-                    className="w-full py-3 pl-12 pr-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 focus:ring-2 focus:ring-orange-500 outline-none"
+                    className="w-full py-3 pl-12 pr-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 focus:ring-2 focus:ring-orange-500 outline-none text-gray-900 dark:text-white"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Submit Buttons */}
+            {/* Action Buttons */}
             <div className="pt-8 flex gap-4">
               <button
                 type="submit"
@@ -268,7 +239,7 @@ function SetProfile() {
               <button
                 type="button"
                 className="px-8 py-4 bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-white/10 transition-all"
-                onClick={() => router.push("/feed")}
+                onClick={() => router.push("/")}
               >
                 Skip
               </button>

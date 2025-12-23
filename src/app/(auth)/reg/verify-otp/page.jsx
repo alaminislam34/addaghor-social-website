@@ -2,124 +2,101 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  OTP_VERIFY,
-  RESEND_OTP,
-  SIGNIN_USER,
-} from "../../../../api/apiEndPoint";
 import { toast } from "react-toastify";
 
+/**
+ * VerifyOTP Component
+ * Registration-er por OTP verify korar jonno bebohar kora hobe.
+ */
 const VerifyOTP = () => {
-  const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
+  const [otp, setOtp] = useState(new Array(6).fill(""));
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [timer, setTimer] = useState(60);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRefs = useRef([]);
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const contact = searchParams.get("contact");
+  const contact = searchParams.get("contact") || "your email/phone";
 
+  // --- Timer Logic ---
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval = null;
     if (timer > 0) {
       interval = setInterval(() => {
         setTimer((prev) => prev - 1);
       }, 1000);
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [timer]);
 
+  // --- Initial Focus ---
   useEffect(() => {
     if (inputRefs.current[0]) {
       inputRefs.current[0].focus();
     }
-    if (!contact) {
-      toast.error("Contact information missing!");
-      router.push("/register");
-    }
-  }, [contact, router]);
+  }, []);
 
-  const handleChange = (element: HTMLInputElement, index: number) => {
+  // --- Input Change Handler ---
+  const handleChange = (element, index) => {
     if (isNaN(Number(element.value))) return false;
+
     const newOtp = [...otp];
     newOtp[index] = element.value;
     setOtp(newOtp);
+
+    // Auto focus next input
     if (element.value !== "" && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
+  // --- Backspace Key Handler ---
+  const handleKeyDown = (e, index) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
-  const handleResendOTP = async () => {
+  // --- Resend OTP Handler (Fake API) ---
+  const handleResendOTP = () => {
     if (timer > 0 || resendLoading) return;
 
     setResendLoading(true);
-    try {
-      const response = await fetch(RESEND_OTP, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier: contact }),
-      });
 
-      const result = await response.json();
-      if (result.success) {
-        toast.success("A new OTP has been sent!");
-        setTimer(60); // ওটিপি পাঠালে টাইমার আবার রিসেট হবে
-        setOtp(new Array(6).fill("")); // ইনপুটগুলো খালি করে দেওয়া
-        inputRefs.current[0]?.focus();
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      toast.error("Failed to resend OTP");
-    } finally {
+    // Mocking API call
+    setTimeout(() => {
+      toast.success("A new OTP has been sent!");
+      setTimer(60);
+      setOtp(new Array(6).fill(""));
       setResendLoading(false);
-    }
+      inputRefs.current[0]?.focus();
+    }, 1200);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // --- Form Submission (Fake API) ---
+  const handleSubmit = (e) => {
     e.preventDefault();
     const otpValue = otp.join("");
+
     if (otpValue.length < 6) {
       toast.error("Please enter the full 6-digit code");
       return;
     }
 
     setLoading(true);
-    try {
-      const response = await fetch(OTP_VERIFY, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          identifier: contact,
-          otp: otpValue,
-        }),
-      });
 
-      const result = await response.json();
-      if (result.success) {
-        toast.success("Account verified successfully!");
-        if (result.accessToken) {
-          localStorage.setItem("accessToken", result.accessToken);
-        }
-        router.push("/reg/set-profile");
-      } else {
-        toast.error(result.message || "Invalid OTP");
-      }
-    } catch (error) {
-      toast.error("Failed to verify OTP. Please try again.");
-    } finally {
+    // Mocking OTP Verification API
+    setTimeout(() => {
+      console.log("Verified OTP:", otpValue);
+      toast.success("Account verified successfully!");
+
+      // Redirect to profile setup
+      router.push("/reg/set-profile");
       setLoading(false);
-    }
+    }, 1500);
   };
 
   return (
@@ -128,13 +105,14 @@ const VerifyOTP = () => {
         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-transparent dark:bg-clip-text dark:bg-linear-to-b dark:from-white dark:to-gray-400">
           Verify OTP
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-2">
+        <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">
           Enter the 6-digit code sent to <br />
           <span className="text-orange-500 font-medium">{contact}</span>
         </p>
       </header>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* OTP Input Boxes */}
         <div className="flex justify-center gap-2 md:gap-4">
           {otp.map((data, index) => (
             <input
@@ -152,6 +130,7 @@ const VerifyOTP = () => {
           ))}
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}
@@ -165,6 +144,7 @@ const VerifyOTP = () => {
         </button>
       </form>
 
+      {/* Resend Footer */}
       <div className="mt-8 text-center text-sm text-gray-500">
         Didn't receive the code?{" "}
         {timer > 0 ? (
@@ -175,6 +155,7 @@ const VerifyOTP = () => {
           <button
             onClick={handleResendOTP}
             disabled={resendLoading}
+            type="button"
             className="text-orange-500 dark:text-orange-400 font-medium hover:underline px-1 disabled:opacity-50"
           >
             {resendLoading ? "Sending..." : "Resend OTP"}
