@@ -74,7 +74,7 @@ function CreatePost() {
       </div>
       <button
         onClick={() => setIsOpen(true)}
-        className="p-2 rounded-full bg-gray-100 dark:bg-gray-600/50 border border-gray-300 dark:border-gray-500/50 dark:hover:bg-gray-600/50 dark:text-white hover:bg-gray-200"
+        className="p-2 rounded-full bg-gray-100 dark:bg-gray-600/50 border border-gray-200 dark:border-gray-500/50  dark:hover:bg-gray-600/50 dark:text-white hover:bg-gray-200"
       >
         <ImagePlus />
       </button>

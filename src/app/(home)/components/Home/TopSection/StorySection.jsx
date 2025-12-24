@@ -103,7 +103,7 @@ function StoryViewer({ initialIndex, onClose }) {
   if (!currentStory) return null;
 
   return (
-    <div className="fixed inset-0 z-999 bg-black/95 flex items-center justify-center backdrop-blur-md">
+    <div className="fixed inset-0 z-999 dark:bg-black/95 bg-black/10 flex items-center justify-center backdrop-blur-md">
       {/* Close Button */}
       <button
         onClick={onClose}
@@ -113,7 +113,7 @@ function StoryViewer({ initialIndex, onClose }) {
       </button>
 
       {/* Main Container */}
-      <div className="relative w-full max-w-112.5 h-full md:h-[90vh] overflow-hidden md:rounded-2xl bg-black flex flex-col items-center justify-center">
+      <div className="relative w-full max-w-112.5 h-full md:h-[90vh] overflow-hidden md:rounded-2xl dark:bg-black bg-black/20 flex flex-col items-center justify-center">
         {/* Progress Bars */}
         <div className="absolute top-4 left-0 right-0 z-50 flex gap-1.5 px-4">
           {stories.map((_, idx) => (

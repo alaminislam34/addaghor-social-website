@@ -769,6 +769,7 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [activeCommentId, setActiveCommentId] = useState(null);
   const observerTarget = useRef(null);
 
   useEffect(() => {
@@ -777,17 +778,13 @@ export default function Home() {
 
   const loadMorePosts = () => {
     if (loading || !hasMore) return;
-
     setLoading(true);
-
     setTimeout(() => {
       const currentLength = posts.length;
       const nextBatch = demoPosts.slice(currentLength, currentLength + 10);
-
       if (nextBatch.length > 0) {
         setPosts((prev) => [...prev, ...nextBatch]);
       }
-
       if (currentLength + nextBatch.length >= demoPosts.length) {
         setHasMore(false);
       }
@@ -808,14 +805,13 @@ export default function Home() {
     if (observerTarget.current) {
       observer.observe(observerTarget.current);
     }
-
     return () => observer.disconnect();
   }, [posts, hasMore, loading]);
 
   return (
     <section className="px-4 md:px-6">
-      <div className="grid grid-cols-1 md:grid-cols-7 lg:grid-cols-9 max-w-380 mx-auto xl:w-11/12 dark:bg-dark min-h-[80vh] text-black border-x border-gray-500/50">
-        <div className="hidden lg:col-span-2 lg:block border-r border-gray-500/50 ">
+      <div className="grid grid-cols-1 md:grid-cols-7 lg:grid-cols-9 max-w-380 mx-auto xl:w-11/12 dark:bg-dark min-h-[80vh] text-black border-x border-gray-200 dark:border-gray-500/50">
+        <div className="hidden lg:col-span-2 lg:block border-r border-gray-200 dark:border-gray-500/50">
           <LeftSidebar />
         </div>
 
@@ -824,11 +820,19 @@ export default function Home() {
           <StorySection />
 
           <section className="p-6">
-            {posts.map((post, i) => (
-              <PostCard key={post.id} post={post} />
+            {posts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                isCommentOpen={activeCommentId === post.id}
+                onCommentToggle={() =>
+                  setActiveCommentId(
+                    activeCommentId === post.id ? null : post.id
+                  )
+                }
+              />
             ))}
 
-            {/* Skeleton Loading State */}
             {loading && (
               <div className="space-y-4">
                 <PostSkeleton />
@@ -846,14 +850,13 @@ export default function Home() {
           </section>
         </div>
 
-        <div className="hidden md:col-span-2 md:block border-l border-gray-500/50">
+        <div className="hidden md:col-span-2 md:block border-l border-gray-200 dark:border-gray-500/50">
           <RightSide />
         </div>
       </div>
     </section>
   );
 }
-
 const PostSkeleton = () => (
   <div className="mb-4 rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-[#242526] p-4 animate-pulse">
     <div className="flex items-center gap-3 mb-4">

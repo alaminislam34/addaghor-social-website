@@ -21,13 +21,19 @@ import {
   NotificationDropdown,
 } from "../NavbarDropDowns";
 import ChatBox from "../ChatBox";
-import { useAuth } from "@/app/providers/authProvider";
 
 export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeChat, setActiveChat] = useState(null);
   const navRef = useRef(null);
-  const { user } = useAuth();
+
+  // --- Fake User Data ---
+  const fakeUser = {
+    full_name: "John Doe",
+    username: "johndoe_123",
+    profile_pic: "/logos/user.png", // Apnar folder-e thaka default image path
+    email: "john@example.com",
+  };
 
   useClickOutside(navRef, () => setActiveDropdown(null));
 
@@ -42,7 +48,7 @@ export default function Navbar() {
         className="px-4 md:px-6 flex items-center justify-between h-20 relative"
       >
         <Link href="/" className="shrink-0">
-          <h1 className="text-xl md:text-2xl font-bold text-Primary">
+          <h1 className="text-xl md:text-2xl font-bold text-orange-500">
             AddaGhor
           </h1>
         </Link>
@@ -53,7 +59,7 @@ export default function Navbar() {
             {[Home, Users, Tv, Group].map((Icon, i) => (
               <li
                 key={i}
-                className="p-3 rounded-xl bg-gray-50 dark:bg-gray-900 text-gray-500 hover:bg-orange-50 hover:text-Primary dark:hover:bg-orange-900/20 dark:hover:text-orange-400 cursor-pointer transition-all"
+                className="p-3 rounded-xl bg-gray-50 dark:bg-gray-900 text-gray-500 hover:bg-orange-50 hover:text-orange-500 dark:hover:bg-orange-900/20 dark:hover:text-orange-400 cursor-pointer transition-all"
               >
                 <Icon size={22} strokeWidth={2} />
               </li>
@@ -83,8 +89,8 @@ export default function Navbar() {
           </div>
           {activeDropdown === "message" && (
             <MessageDropdown
-              onSelectChat={(user) => {
-                setActiveChat(user);
+              onSelectChat={(selectedUser) => {
+                setActiveChat(selectedUser);
                 setActiveDropdown(null);
               }}
             />
@@ -106,7 +112,7 @@ export default function Navbar() {
               className="flex items-center gap-1 cursor-pointer p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 border border-transparent hover:border-gray-200 transition-all"
             >
               <Image
-                src={"/logos/user.png"}
+                src={fakeUser.profile_pic}
                 height={38}
                 width={38}
                 alt="User"
@@ -120,7 +126,7 @@ export default function Navbar() {
               />
             </div>
           </div>
-          {activeDropdown === "user" && <UserDropdown user={user} />}
+          {activeDropdown === "user" && <UserDropdown user={fakeUser} />}
         </div>
 
         {/* The Floating Chat Box */}
@@ -140,13 +146,13 @@ function NavButton({ icon, isActive, onClick, badge }) {
         w-10 h-10 rounded-full flex items-center justify-center transition-all relative
         ${
           isActive
-            ? "bg-orange-100 text-Primary dark:bg-orange-900/30 dark:text-orange-400"
+            ? "bg-orange-100 text-orange-500 dark:bg-orange-900/30 dark:text-orange-400"
             : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
         }
       `}
     >
       {badge > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white dark:border-dark-bg min-w-5 text-center">
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white dark:border-black min-w-5 text-center">
           {badge}
         </span>
       )}
