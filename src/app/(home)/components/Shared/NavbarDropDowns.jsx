@@ -48,7 +48,7 @@ export function MessageDropdown({ onSelectChat }) {
   ];
 
   return (
-    <div className="absolute top-20 right-6 w-90 origin-top-right rounded-2xl border border-gray-100 bg-white shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 dark:border-gray-800 dark:bg-gray-900 z-50 overflow-hidden">
+    <div className="absolute top-20 right-6 max-w-90 origin-top-right rounded-2xl border border-gray-100 bg-white shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 dark:border-gray-800 dark:bg-gray-900 z-50 overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
         <h3 className="font-bold text-gray-900 dark:text-white">Messages</h3>
         <Link
@@ -120,7 +120,7 @@ export function MessageDropdown({ onSelectChat }) {
 // --- 2. NOTIFICATION DROPDOWN ---
 export function NotificationDropdown() {
   return (
-    <div className="absolute top-20 right-6 w-90 origin-top-right rounded-2xl border border-gray-100 bg-white shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 dark:border-gray-800 dark:bg-gray-900 z-50 overflow-hidden">
+    <div className="absolute top-20 right-6 max-w-80 w-full origin-top-right rounded-2xl border border-gray-100 bg-white shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 dark:border-gray-800 dark:bg-gray-900 z-50 overflow-hidden">
       <div className="p-4 flex items-center justify-between border-b border-gray-100 dark:border-gray-800">
         <div>
           <h3 className="text-sm font-bold text-gray-900 dark:text-white">
@@ -173,7 +173,7 @@ export function MenuDropdown({ onClose }) {
   ];
 
   return (
-    <div className="absolute top-20 right-6 w-75 origin-top-right rounded-2xl border border-gray-100 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200 dark:border-gray-800 dark:bg-gray-900 z-50 overflow-hidden">
+    <div className="absolute top-20 right-6 max-w-75 w-full origin-top-right rounded-2xl border border-gray-100 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200 dark:border-gray-800 dark:bg-gray-900 z-50 overflow-hidden">
       <div className="p-2">
         <ul className="flex flex-col gap-1">
           {menuItems.map((item, index) => (
@@ -213,7 +213,7 @@ export function UserDropdown({ user }) {
     }
   };
   return (
-    <div className="absolute top-20 right-6 w-64 origin-top-right rounded-2xl border border-gray-100 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200 dark:border-gray-800 dark:bg-gray-900 z-50 p-2">
+    <div className="absolute top-20 right-6 max-w-64 origin-top-right rounded-2xl border border-gray-100 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200 dark:border-gray-800 dark:bg-gray-900 z-50 p-2">
       <div className="p-3 mb-1 flex items-center gap-3">
         <Image
           src={"/logos/user.png"}

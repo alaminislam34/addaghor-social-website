@@ -5,7 +5,9 @@ import RightSide from "@/app/(home)/components/Home/RightSide/RightSide";
 import StorySection from "@/app/(home)/components/Home/TopSection/StorySection";
 import PostCard from "@/app/(home)/components/Home/PostCard/Post";
 import { useEffect, useRef, useState } from "react";
-const demoPosts = [
+import { useAuth } from "../providers/authProvider";
+import FullPageSkeleton from "./components/Home/PageSkeleton/FullPageSkeleton";
+export const demoPosts = [
   {
     id: 1,
     author: {
@@ -771,6 +773,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [activeCommentId, setActiveCommentId] = useState(null);
   const observerTarget = useRef(null);
+  const { setActiveChat, loading: PageLoad } = useAuth();
 
   useEffect(() => {
     setPosts(demoPosts.slice(0, 10));
@@ -807,7 +810,9 @@ export default function Home() {
     }
     return () => observer.disconnect();
   }, [posts, hasMore, loading]);
-
+  if (PageLoad) {
+    return <FullPageSkeleton />;
+  }
   return (
     <section className="px-4 md:px-6">
       <div className="grid grid-cols-1 md:grid-cols-7 lg:grid-cols-9 max-w-380 mx-auto xl:w-11/12 dark:bg-dark min-h-[80vh] text-black border-x border-gray-200 dark:border-gray-500/50">
@@ -851,13 +856,13 @@ export default function Home() {
         </div>
 
         <div className="hidden md:col-span-2 md:block border-l border-gray-200 dark:border-gray-500/50">
-          <RightSide />
+          <RightSide onSelectChat={setActiveChat} />
         </div>
       </div>
     </section>
   );
 }
-const PostSkeleton = () => (
+export const PostSkeleton = () => (
   <div className="mb-4 rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-[#242526] p-4 animate-pulse">
     <div className="flex items-center gap-3 mb-4">
       <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>

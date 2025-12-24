@@ -14,6 +14,13 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeChat, setActiveChat] = useState(null);
+
+  useEffect(() => {
+    // Data fetch ba load houar por loading false hobe
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   /* ---------- Fetch current user ---------- */
   const fetchUser = async () => {
@@ -44,7 +51,8 @@ export function AuthProvider({ children }) {
     user,
     loading,
     isAuthenticated: !!user,
-
+    activeChat,
+    setActiveChat,
     refetchUser,
   };
 

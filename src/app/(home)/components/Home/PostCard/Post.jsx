@@ -11,7 +11,7 @@ import {
   CheckCircle2,
   Send,
 } from "lucide-react";
-import Image from "next/image";
+import NextImage from "next/image"; // Image conflict fix
 import { FaHeart } from "react-icons/fa";
 
 const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
@@ -20,6 +20,13 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const commentInputRef = useRef(null);
+
+  // Safety Check: Post ba Author undefined hole error handle korbe
+  if (!post || !post.author) {
+    return (
+      <div className="mb-4 rounded-xl h-40 bg-gray-200 dark:bg-gray-800 animate-pulse" />
+    );
+  }
 
   // Auto-focus when this specific comment box is opened
   useEffect(() => {
@@ -34,7 +41,6 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
 
     setIsSubmitting(true);
     try {
-      // API call placeholder
       await new Promise((resolve) => setTimeout(resolve, 800));
       console.log("Commented on Post:", post.id, "Value:", commentText);
       setCommentText("");
@@ -46,13 +52,13 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
   };
 
   return (
-    <div className="mb-4 rounded-xl shadow-md border border-gray-300 dark:border-white/10 bg-white dark:bg-[#1c1c1d] overflow-hidden font-sans max-w-2xl mx-auto">
+    <div className="mb-4 rounded-xl shadow-md border border-gray-300 dark:border-white/10 bg-white dark:bg-[#1D232A] overflow-hidden">
       {/* Header Section */}
       <div className="flex items-center justify-between p-3">
         <div className="flex items-center gap-2">
-          <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-200 shrink-0">
-            <Image
-              src={post.author.avatar}
+          <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-200 shrink-0 bg-gray-100">
+            <NextImage
+              src={post.author.avatar || "/user-placeholder.png"} // Fallback image
               fill
               alt="Profile"
               className="object-cover"
@@ -61,7 +67,7 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
           <div className="flex flex-col">
             <div className="flex items-center gap-1">
               <span className="font-bold text-[15px] dark:text-white hover:underline cursor-pointer leading-tight">
-                {post.author.name}
+                {post?.author?.name || "Unknown User"}
               </span>
               {post.author.verified && (
                 <CheckCircle2
@@ -71,7 +77,7 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
               )}
             </div>
             <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 text-xs">
-              <span>{post.time}</span>
+              <span>{post.time || "Just now"}</span>
               <span>•</span>
               <Globe size={12} />
             </div>
@@ -89,7 +95,7 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
 
       {/* Content Section */}
       <div className="content-container">
-        {post.content.map((item, index) => {
+        {post.content?.map((item, index) => {
           if (item.type === "text")
             return (
               <p
@@ -99,19 +105,13 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
                 {item.value}
               </p>
             );
-          if (item.type === "emoji")
-            return (
-              <p key={index} className="px-4 pb-2 text-2xl">
-                {item.value}
-              </p>
-            );
           if (item.type === "image")
             return (
               <div
                 key={index}
                 className="relative w-full bg-gray-100 dark:bg-gray-800 mt-2"
               >
-                <Image
+                <NextImage
                   src={item.src}
                   height={600}
                   width={800}
@@ -136,15 +136,15 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
             </div>
           </div>
           <span className="ml-1 hover:underline cursor-pointer">
-            {liked ? post.likes + 1 : post.likes}
+            {liked ? (post.likes || 0) + 1 : post.likes || 0}
           </span>
         </div>
         <div className="flex gap-3">
           <span className="hover:underline cursor-pointer">
-            {post.comments} comments
+            {post.comments || 0} comments
           </span>
           <span className="hover:underline cursor-pointer">
-            {post.shares} shares
+            {post.shares || 0} shares
           </span>
         </div>
       </div>
@@ -154,45 +154,49 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
         <button
           onClick={() => setLiked(!liked)}
           className={`flex items-center gap-2 flex-1 justify-center py-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-md transition-colors ${
-            liked ? "text-blue-500" : "text-gray-600 dark:text-gray-400"
+            liked
+              ? "text-blue-500 font-bold"
+              : "text-gray-600 dark:text-gray-400"
           }`}
         >
           <ThumbsUp size={20} className={liked ? "fill-blue-500" : ""} />
-          <span className="font-semibold text-sm">Like</span>
+          <span className="text-sm">Like</span>
         </button>
 
         <button
-          onClick={onCommentToggle} // Using parent toggle function
+          onClick={onCommentToggle}
           className={`flex items-center gap-2 flex-1 justify-center py-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-md transition-colors ${
-            isCommentOpen ? "text-blue-500" : "text-gray-600 dark:text-gray-400"
+            isCommentOpen
+              ? "text-blue-500 font-bold"
+              : "text-gray-600 dark:text-gray-400"
           }`}
         >
           <MessageSquare size={20} />
-          <span className="font-semibold text-sm">Comment</span>
+          <span className="text-sm">Comment</span>
         </button>
 
         <button className="flex items-center gap-2 flex-1 justify-center py-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-md transition-colors text-gray-600 dark:text-gray-400">
           <Share2 size={20} />
-          <span className="font-semibold text-sm">Share</span>
+          <span className="text-sm">Share</span>
         </button>
       </div>
 
+      {/* Comment Section */}
       {isCommentOpen && (
-        <div className="px-4 pb-4 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="border-t border-gray-200 dark:border-white/10 mb-3"></div>
+        <div className="px-4 pb-4 animate-in fade-in slide-in-from-top-2">
+          <div className="border-t border-gray-200 dark:border-white/10 mb-3" />
           <form
             onSubmit={handleCommentSubmit}
             className="flex items-start gap-2"
           >
             <div className="relative w-9 h-9 rounded-full overflow-hidden border border-gray-200 shrink-0">
-              <Image
+              <NextImage
                 src={post.author.avatar}
                 fill
                 alt="User"
                 className="object-cover"
               />
             </div>
-
             <div className="flex-1 flex flex-row gap-2">
               <textarea
                 ref={commentInputRef}
@@ -200,7 +204,6 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
                 onChange={(e) => setCommentText(e.target.value)}
                 placeholder="Write a comment..."
                 rows={1}
-                disabled={isSubmitting}
                 className="w-full bg-gray-100 dark:bg-white/10 rounded-2xl py-2 px-4 outline-none focus:ring-1 focus:ring-blue-500 text-[15px] dark:text-white resize-none"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
@@ -209,18 +212,14 @@ const PostCard = ({ post, isCommentOpen, onCommentToggle }) => {
                   }
                 }}
               />
-
               {commentText.trim() && (
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-full text-sm font-semibold transition disabled:opacity-50 flex items-center gap-2"
-                  >
-                    {isSubmitting ? "..." : "Post"}
-                    <Send size={14} />
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="text-blue-600 p-2 self-end"
+                >
+                  <Send size={20} />
+                </button>
               )}
             </div>
           </form>

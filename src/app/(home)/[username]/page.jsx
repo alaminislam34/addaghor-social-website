@@ -1,7 +1,11 @@
-import type { Metadata } from "next";
-import "../globals.css";
-import Navbar from "../(home)/components/Shared/Header/Navbar";
-import { AuthProvider } from "@/app/providers/authProvider";
+// app/profile/page.jsx
+"use client";
+
+import ProfileHeader from "./components/ProfileHeader";
+import ProfileSidebar from "./components/ProfileSidebar";
+import CreatePost from "../components/Home/TopSection/CreatePost";
+import PostCard from "../components/Home/PostCard/Post";
+import { useEffect, useRef, useState } from "react";
 export const demoPosts = [
   {
     id: 1,
@@ -762,26 +766,121 @@ export const demoPosts = [
     shares: 250,
   },
 ];
-export const metadata: Metadata = {
-  title: "AddaGhor",
-  description: "Powered by Md Al Amin Islam",
-};
+export default function ProfilePage() {
+  const [posts, setPosts] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [activeCommentId, setActiveCommentId] = useState(null);
+  const observerTarget = useRef(null);
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  useEffect(() => {
+    setPosts(demoPosts.slice(0, 10));
+  }, []);
+
+  const loadMorePosts = () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    setTimeout(() => {
+      const currentLength = posts.length;
+      const nextBatch = demoPosts.slice(currentLength, currentLength + 10);
+      if (nextBatch.length > 0) {
+        setPosts((prev) => [...prev, ...nextBatch]);
+      }
+      if (currentLength + nextBatch.length >= demoPosts.length) {
+        setHasMore(false);
+      }
+      setLoading(false);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMorePosts();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+    return () => observer.disconnect();
+  }, [posts, hasMore, loading]);
+
   return (
-    <html lang="en">
-      <AuthProvider>
-        <body className="bg-light transition-colors duration-300">
-          <header className="h-16.5">
-            <Navbar />
-          </header>
-          <main>{children}</main>
-        </body>
-      </AuthProvider>
-    </html>
+    <div className="min-h-screen bg-gray-100 dark:bg-[#18191a] pb-10">
+      <ProfileHeader />
+
+      <div className="max-w-6xl mx-auto px-4 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+          {/* LEFT SIDE: Sticky Intro & Photos */}
+          <div className="md:col-span-5 sticky top-[20px] hidden md:flex flex-col gap-4">
+            {/* Note: top value header height er upor depend korbe */}
+            <ProfileSidebar />
+          </div>
+
+          {/* RIGHT SIDE: Scrollable Posts */}
+          <div className="md:col-span-7 flex flex-col gap-4">
+            <CreatePost />
+            <div className="flex justify-between items-center bg-white dark:bg-[#242526] p-3 rounded-xl shadow">
+              <h2 className="font-bold text-lg dark:text-white">Posts</h2>
+              <button className="bg-gray-200 dark:bg-gray-700 px-3 py-1.5 rounded-lg font-semibold">
+                Filters
+              </button>
+            </div>
+
+            {/* Post List Section */}
+            <div className="flex flex-col gap-4">
+              {posts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  isCommentOpen={activeCommentId === post.id}
+                  onCommentToggle={() =>
+                    setActiveCommentId(
+                      activeCommentId === post.id ? null : post.id
+                    )
+                  }
+                />
+              ))}
+
+              {loading && (
+                <div className="space-y-4">
+                  <PostSkeleton />
+                  <PostSkeleton />
+                </div>
+              )}
+
+              {/* Observer Target */}
+              <div ref={observerTarget} className="h-10 w-full"></div>
+
+              {!hasMore && (
+                <p className="text-center text-gray-500 py-4">
+                  No more posts to show.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
+export const PostSkeleton = () => (
+  <div className="mb-4 rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-[#242526] p-4 animate-pulse">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+      <div className="flex-1 space-y-2">
+        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-1/6"></div>
+      </div>
+    </div>
+    <div className="space-y-2">
+      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+      <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded w-full mt-4"></div>
+    </div>
+  </div>
+);
