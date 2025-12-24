@@ -37,7 +37,7 @@ export default function ChatBox({ user, onClose }) {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 w-82.5 bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200 dark:border-gray-800 z-60 animate-in slide-in-from-bottom-5 overflow-hidden">
+    <div className="fixed bottom-6 right-6 max-w-100 w-full h-120 bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200 dark:border-gray-800 z-60 animate-in slide-in-from-bottom-5 overflow-hidden">
       {/* HEADER SECTION */}
       <div className="flex items-center justify-between p-3 border-b border-gray-100 dark:border-gray-800">
         <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ export default function ChatBox({ user, onClose }) {
       {/* CHAT AREA */}
       <div
         ref={scrollRef}
-        className="h-72 overflow-y-auto p-4 flex flex-col gap-3 bg-gray-50/50 dark:bg-gray-800/30 scroll-smooth"
+        className="h-89 overflow-y-auto p-4 flex flex-col gap-3 bg-gray-50/50 dark:bg-gray-800/30 scroll-smooth"
       >
         {chatHistory.map((chat) => (
           <div

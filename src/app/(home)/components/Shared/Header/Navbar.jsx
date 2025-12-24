@@ -21,12 +21,10 @@ import {
   NotificationDropdown,
 } from "../NavbarDropDowns";
 import ChatBox from "../ChatBox";
-import { useAuth } from "@/app/providers/authProvider";
-import NavbarSkeleton from "./NavbarSkeleton";
 
 export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const { activeChat, setActiveChat, loading } = useAuth();
+  const [activeChat, setActiveChat] = useState(null);
   const navRef = useRef(null);
 
   // --- Fake User Data ---
@@ -42,105 +40,101 @@ export default function Navbar() {
   const toggleDropdown = (name) => {
     setActiveDropdown(activeDropdown === name ? null : name);
   };
-  if (loading) {
-    return <NavbarSkeleton />;
-  }
 
   return (
-    <>
-      <div className="fixed top-0 left-0 w-full z-50 bg-white dark:bg-[#1D232A] backdrop-blur-3xl border-b border-gray-100 dark:border-gray-500/50 transition-colors">
-        <nav
-          ref={navRef}
-          className="px-4 md:px-6 flex items-center justify-between py-2 relative"
-        >
-          <Link href="/" className="shrink-0">
-            <h1 className="text-xl md:text-2xl font-bold text-orange-500">
-              Facebook
-            </h1>
-          </Link>
+    <div className="fixed top-0 left-0 w-full z-50 bg-white dark:bg-transparent backdrop-blur-3xl border-b border-gray-200 dark:border-gray-500/50 transition-colors">
+      <nav
+        ref={navRef}
+        className="px-4 md:px-6 flex items-center justify-between h-20 relative"
+      >
+        <Link href="/" className="shrink-0">
+          <h1 className="text-xl md:text-2xl font-bold text-orange-500">
+            AddaGhor
+          </h1>
+        </Link>
 
-          {/* Center Links */}
-          <div className="hidden lg:block">
-            <ul className="flex flex-row gap-12 items-center">
-              {[Home, Users, Tv, Group].map((Icon, i) => (
-                <li
-                  key={i}
-                  className="py-3 px-6 text-gray-500 border-b-2 hover:border-gray-300 border-transparent dark:hover:border-gray-500 duration-300 cursor-pointer transition-all"
-                >
-                  <Icon size={22} strokeWidth={2} />
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="flex items-center gap-2 md:gap-3">
-            <div className="relative">
-              <NavButton
-                icon={<LayoutGrid size={20} />}
-                isActive={activeDropdown === "menu"}
-                onClick={() => toggleDropdown("menu")}
-              />
-            </div>
-            {activeDropdown === "menu" && (
-              <MenuDropdown onClose={() => setActiveDropdown(null)} />
-            )}
-
-            <div className="relative">
-              <NavButton
-                icon={<MessageCircle size={20} />}
-                isActive={activeDropdown === "message"}
-                onClick={() => toggleDropdown("message")}
-                badge={5}
-              />
-            </div>
-            {activeDropdown === "message" && (
-              <MessageDropdown
-                onSelectChat={(selectedUser) => {
-                  setActiveChat(selectedUser);
-                  setActiveDropdown(null);
-                }}
-              />
-            )}
-
-            <div className="relative">
-              <NavButton
-                icon={<Bell size={20} />}
-                isActive={activeDropdown === "notification"}
-                onClick={() => toggleDropdown("notification")}
-                badge={3}
-              />
-            </div>
-            {activeDropdown === "notification" && <NotificationDropdown />}
-
-            <div className="relative ml-1">
-              <div
-                onClick={() => toggleDropdown("user")}
-                className="flex items-center gap-1 cursor-pointer p-1 rounded-full hover:bg-gray-200 bg-gray-100 dark:hover:bg-gray-800 border border-transparent dark:border-gray-500/50 transition-all group"
+        {/* Center Links */}
+        <div className="hidden lg:block">
+          <ul className="flex flex-row gap-6 items-center">
+            {[Home, Users, Tv, Group].map((Icon, i) => (
+              <li
+                key={i}
+                className="p-3 rounded-xl bg-gray-50 dark:bg-gray-900 text-gray-500 hover:bg-orange-50 hover:text-orange-500 dark:hover:bg-orange-900/20 dark:hover:text-orange-400 cursor-pointer transition-all"
               >
-                <Image
-                  src={fakeUser.profile_pic}
-                  height={38}
-                  width={38}
-                  alt="User"
-                  className="w-9.5 h-9.5 rounded-full object-cover border border-gray-200 group-hover:border-gray-300 dark:border-gray-500/50"
-                />
-                <ChevronDown
-                  size={14}
-                  className={`text-gray-400 transition-transform duration-200 ${
-                    activeDropdown === "user" ? "rotate-180" : ""
-                  }`}
-                />
-              </div>
-            </div>
-            {activeDropdown === "user" && <UserDropdown user={fakeUser} />}
+                <Icon size={22} strokeWidth={2} />
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="relative">
+            <NavButton
+              icon={<LayoutGrid size={20} />}
+              isActive={activeDropdown === "menu"}
+              onClick={() => toggleDropdown("menu")}
+            />
           </div>
-        </nav>
-      </div>
-      {/* The Floating Chat Box */}
-      {activeChat && (
-        <ChatBox user={activeChat} onClose={() => setActiveChat(null)} />
-      )}
-    </>
+          {activeDropdown === "menu" && (
+            <MenuDropdown onClose={() => setActiveDropdown(null)} />
+          )}
+
+          <div className="relative">
+            <NavButton
+              icon={<MessageCircle size={20} />}
+              isActive={activeDropdown === "message"}
+              onClick={() => toggleDropdown("message")}
+              badge={5}
+            />
+          </div>
+          {activeDropdown === "message" && (
+            <MessageDropdown
+              onSelectChat={(selectedUser) => {
+                setActiveChat(selectedUser);
+                setActiveDropdown(null);
+              }}
+            />
+          )}
+
+          <div className="relative">
+            <NavButton
+              icon={<Bell size={20} />}
+              isActive={activeDropdown === "notification"}
+              onClick={() => toggleDropdown("notification")}
+              badge={3}
+            />
+          </div>
+          {activeDropdown === "notification" && <NotificationDropdown />}
+
+          <div className="relative ml-1">
+            <div
+              onClick={() => toggleDropdown("user")}
+              className="flex items-center gap-1 cursor-pointer p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 border border-transparent hover:border-gray-200 transition-all"
+            >
+              <Image
+                src={fakeUser.profile_pic}
+                height={38}
+                width={38}
+                alt="User"
+                className="w-9.5 h-9.5 rounded-full object-cover border border-gray-200"
+              />
+              <ChevronDown
+                size={14}
+                className={`text-gray-400 transition-transform duration-200 ${
+                  activeDropdown === "user" ? "rotate-180" : ""
+                }`}
+              />
+            </div>
+          </div>
+          {activeDropdown === "user" && <UserDropdown user={fakeUser} />}
+        </div>
+
+        {/* The Floating Chat Box */}
+        {activeChat && (
+          <ChatBox user={activeChat} onClose={() => setActiveChat(null)} />
+        )}
+      </nav>
+    </div>
   );
 }
 
