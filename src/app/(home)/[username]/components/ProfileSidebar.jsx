@@ -55,33 +55,6 @@ export default function ProfileSidebar() {
           </button>
         </div>
       </div>
-
-      {/* Photos Preview Card */}
-      <div className="bg-white dark:bg-[#242526] p-4 rounded-xl shadow">
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="text-xl font-bold dark:text-white">Photos</h2>
-          <button className="text-blue-600 hover:bg-gray-100 dark:hover:bg-gray-800 p-1 px-2 rounded transition">
-            See all photos
-          </button>
-        </div>
-
-        <div className="grid grid-cols-3 gap-1.5 rounded-xl overflow-hidden">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-            <div
-              key={i}
-              className="aspect-square bg-gray-200 dark:bg-gray-700 relative group cursor-pointer"
-            >
-              <NextImage
-                src={`/photos/gallery-${i}.jpg`} // Apnar images folder onujayi path change korun
-                fill
-                className="object-cover group-hover:brightness-110 transition"
-                alt={`gallery-${i}`}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Friends Preview Card (Bonus) */}
       <div className="bg-white dark:bg-[#242526] p-4 rounded-xl shadow">
         <div className="flex justify-between items-center mb-1">
