@@ -779,7 +779,7 @@ export default function RootLayout({
           <header className="h-16.5">
             <Navbar />
           </header>
-          <main>{children}</main>
+          <main className="pt-6">{children}</main>
         </body>
       </AuthProvider>
     </html>
