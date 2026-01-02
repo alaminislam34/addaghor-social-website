@@ -3,6 +3,7 @@
 import { Plus, ChevronRight, ChevronLeft, X, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState, useEffect, useCallback } from "react";
+import StoryModal from "@/app/(home)/components/Home/Modal/StoryModal";
 
 const stories = [
   {
@@ -224,6 +225,7 @@ export default function StorySection() {
   const scrollRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [selectedStoryIndex, setSelectedStoryIndex] = useState(null);
+  const [addStory, setAddStory] = useState(false);
 
   const handleScroll = () => {
     if (scrollRef.current) setShowLeftArrow(scrollRef.current.scrollLeft > 10);
@@ -256,7 +258,10 @@ export default function StorySection() {
         onScroll={handleScroll}
         className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar scroll-smooth mx-auto"
       >
-        <div className="relative shrink-0 min-w-37.5 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
+        <div
+          onClick={() => setAddStory(true)}
+          className="relative shrink-0 min-w-37.5 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm"
+        >
           <div className="h-[70%] relative overflow-hidden">
             <Image
               src="/logos/user.png"
@@ -321,6 +326,7 @@ export default function StorySection() {
           onClose={() => setSelectedStoryIndex(null)}
         />
       )}
+      {addStory && <StoryModal isOpen={addStory} setAddStory={setAddStory} />}
     </div>
   );
 }

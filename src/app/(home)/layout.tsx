@@ -775,7 +775,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-        <body className="bg-light transition-colors duration-300">
+        <body
+          className="bg-light transition-colors duration-300"
+          cz-shortcut-listen="true"
+        >
           <header className="h-16.5">
             <Navbar />
           </header>

@@ -816,12 +816,10 @@ export default function ProfilePage() {
       <div className="max-w-6xl mx-auto px-4 mt-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
           {/* LEFT SIDE: Sticky Intro & Photos */}
-          <div className="md:col-span-5 sticky top-[20px] hidden md:flex flex-col gap-4">
-            {/* Note: top value header height er upor depend korbe */}
+          <div className="md:col-span-5 sticky top-6 hidden md:flex flex-col gap-4">
             <ProfileSidebar />
           </div>
 
-          {/* RIGHT SIDE: Scrollable Posts */}
           <div className="md:col-span-7 flex flex-col gap-4">
             <CreatePost />
             <div className="flex justify-between items-center bg-white dark:bg-[#242526] p-3 rounded-xl shadow">
@@ -831,7 +829,6 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            {/* Post List Section */}
             <div className="flex flex-col gap-4">
               {posts.map((post) => (
                 <PostCard
