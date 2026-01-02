@@ -2,6 +2,7 @@
 
 import { ImagePlus, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 
 function CreatePost() {
@@ -50,16 +51,18 @@ function CreatePost() {
   };
 
   return (
-    <div className="flex items-center gap-6 border-b border-b-gray-200 dark:border-b-gray-500/50 p-4 relative">
+    <div className="flex items-center gap-6 border-b border-b-gray-200 dark:border-b-gray-500/50 p-4 relative pt-8">
       {/* --- Trigger Area --- */}
       <div className="w-12 h-10 border rounded-full border-gray-300 dark:border-Primary">
-        <Image
-          src={"/logos/user.png"}
-          width={40}
-          height={40}
-          alt="User image"
-          className=" w-10 h-10 bg-cover bg-center object-cover rounded-full"
-        />
+        <Link href={"/profile"}>
+          <Image
+            src={"/logos/user.png"}
+            width={40}
+            height={40}
+            alt="User image"
+            className=" w-10 h-10 bg-cover bg-center object-cover rounded-full"
+          />
+        </Link>
       </div>
       <div className="w-full">
         <div className="w-full">
@@ -84,7 +87,7 @@ function CreatePost() {
         <div className="fixed inset-0 w-full h-full bg-color-overlay-dark backdrop-blur-sm flex items-center justify-center z-100 p-4 animate-in fade-in duration-200">
           <div
             ref={modalRef}
-            className="max-w-xl w-full bg-light-surface dark:bg-dark-surface rounded-3xl shadow-light-lg dark:shadow-dark-lg border border-light-border dark:border-dark-border overflow-hidden animate-in zoom-in-95 duration-300"
+            className="max-w-xl w-full bg-light-surface dark:bg-gray-800 rounded-3xl shadow-light-lg dark:shadow-dark-lg border border-light-border dark:border-dark-border overflow-hidden animate-in zoom-in-95 duration-300"
           >
             {/* Header */}
             <div className="p-5 border-b border-light-border dark:border-dark-border flex justify-between items-center">

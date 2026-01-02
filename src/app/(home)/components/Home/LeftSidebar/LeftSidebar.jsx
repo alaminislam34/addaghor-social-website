@@ -10,23 +10,29 @@ import {
   Users,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 function LeftSidebar() {
   return (
     <aside className="flex flex-col xl:w-[320px] h-[calc(100vh-76px)] lg:h-[calc(100vh-80px)] sticky top-20 no-scrollbar p-4 overflow-y-auto custom-scrollbar bg-transparent">
       {/* User Profile Section */}
-      <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-light-surface-hover dark:hover:bg-dark-surface-hover cursor-pointer transition-all group">
-        <div className="relative w-9 h-9 rounded-full overflow-hidden border border-light-border dark:border-dark-border">
-          <Image
-            src="/logos/user.png"
-            alt="User"
-            fill
-            className="object-cover"
-          />
-        </div>
-        <span className="font-bold text-sm text-light-text-primary dark:text-dark-text-primary">
-          Al Amin Islam
-        </span>
+      <div>
+        <Link
+          href={"/profile"}
+          className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-light-surface-hover dark:hover:bg-dark-surface-hover cursor-pointer transition-all group"
+        >
+          <div className="relative w-9 h-9 rounded-full overflow-hidden border border-light-border dark:border-dark-border">
+            <Image
+              src="/logos/user.png"
+              alt="User"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <span className="font-bold text-sm text-light-text-primary dark:text-dark-text-primary">
+            Al Amin Islam
+          </span>
+        </Link>
       </div>
 
       <nav className="mt-2 space-y-1">
